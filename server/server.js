@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 
-const PORT = 3333;
+const PORT = process.env.PORT || 8080;
 const { createServer } = require('http');
 const generate_id = require('./id_generator.js');
 

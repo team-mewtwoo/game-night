@@ -8,7 +8,8 @@ import SocketContext from './context/SocketContext';
 import io from 'socket.io-client';
 import '../assets/styles/style.css';
 
-const socket = io.connect('http://localhost:3333');
+// const socket = io.connect('http://localhost:3333');
+const socket = io();
 
 ReactDOM.render(
   <SocketContext.Provider value={socket}>
