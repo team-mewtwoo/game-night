@@ -1,5 +1,6 @@
 body {
-  background-image: url('https://i.pinimg.com/originals/f2/f5/13/f2f513ded2eca406b32c468ffd961614.jpg');
+  /* background-image: url('https://i.pinimg.com/originals/f2/f5/13/f2f513ded2eca406b32c468ffd961614.jpg'); */
+  background-color: aquamarine;
   background-size: cover;
   text-align: center;
   font-family: sans-serif;
@@ -43,7 +44,7 @@ img {
 
 button {
   border-radius: 5px;
-  background-color: rgb(213, 157, 247);
+  background-color: rgb(163, 157, 247);
   font-weight: bold;
 }
 
