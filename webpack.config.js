@@ -2,13 +2,6 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const dotenv = require('dotenv');
-const envFile = dotenv.config().parsed;
-const envKeys = Object.keys(envFile).reduce((prev, next) => {
-  prev[`process.env.${next}`] = JSON.stringify(envFile[next]);
-  return prev;
-}, {});
-
 module.exports = (env) => {
   return {
     entry: [
@@ -71,8 +64,7 @@ module.exports = (env) => {
     plugins: [
       new HtmlWebpackPlugin({
         template: './client/index.html',
-      }),
-      new webpack.DefinePlugin(envKeys),
+      })
     ],
     resolve: {
       // Enable importing JS / JSX files without specifying their extension
