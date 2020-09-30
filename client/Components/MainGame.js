@@ -1,3 +1,5 @@
+/* Team WhatTheGif */
+
 import React, { useState, useContext } from 'react';
 import Waiting from './Waiting';
 import SoloInput from './SoloInput';
@@ -14,7 +16,10 @@ const MainGame = () => {
   const [currGif, setCurrGif] = useState('');
   const [currJudge, setCurrJudge] = useState('');
   const [submittedInputs, setSubmittedInputs] = useState([]);
-  const [roundWinner, setRoundWinner] = useState({ winningPhrase: '', player: '' });
+  const [roundWinner, setRoundWinner] = useState({
+    winningPhrase: '',
+    player: '',
+  });
 
   const [isJudge, setIsJudge] = useState(false);
   const [isWaiting, setIsWaiting] = useState(false);
@@ -72,28 +77,53 @@ const MainGame = () => {
     currentView = <SoloInput judge={currJudge} />;
   } else {
     currentView = (
-      <WinRound winningPhrase={roundWinner.winningPhrase} roundWinner={roundWinner.player} />
+      <WinRound
+        winningPhrase={roundWinner.winningPhrase}
+        roundWinner={roundWinner.player}
+      />
     );
   }
 
   return (
-    <div className="page">
+    <div className='page'>
       <div>
         <h3>
-          <span className="purple-text">
-            Welcome to the '<span className="teal-text">{player.room}</span>' room, The Legendary{' '}
-            {player.name}
+          <span className='purple-text'>
+            Welcome to the '<span className='teal-text'>{player.room}</span>'
+            room, The Legendary {player.name}
           </span>
         </h3>
-        <img className="gif" src={currGif}></img>
+        <img className='gif' src={currGif}></img>
         <h3>
-          The Current Judge is <span className="underline teal-text">{currJudge}</span>
+          The Current Judge is{' '}
+          <span className='underline teal-text'>{currJudge}</span>
+            room, The Legendary {player.name}
+          </span>
         </h3>
-      </div>
-      {currentView}
-      <br />
-      <ScoreBoard />
-    </div>
+        <img className='gif' src={currGif}></img>
+        <h3>
+        The Current Judge is{' '}
+          <span className='underline teal-text'>{currJudge}</span>
+            room, The Legendary {player.name}
+          </span>
+        </h3>
+        <img className='gif' src={currGif}></img>
+        <h3>
+      The Current Judge is{' '}
+          <span className='underline teal-text'>{currJudge}</span>
+            room, The Legendary {player.name}
+          </span>
+        </h3 >
+        <img className='gif' src={currGif}></img>
+        <h3>
+    The Current Judge is{' '}
+          <span className='underline teal-text'>{currJudge}</span>
+        </h3>
+      </div >
+  { currentView }
+  < br />
+  <ScoreBoard />
+    </div >
   );
 };
 

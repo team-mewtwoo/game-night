@@ -1,3 +1,5 @@
+/* Team WTG */
+
 import React, { useState, useContext } from 'react';
 import UserScore from './UserScore';
 import SocketContext from '../context/SocketContext';

@@ -5,7 +5,7 @@ const path = require('path');
 
 const PORT = 3333;
 const { createServer } = require('http');
-const generate_id = require('./id_generator.js')
+const generate_id = require('./id_generator.js');
 
 const server = createServer(app);
 const socketio = require('socket.io');
@@ -22,24 +22,27 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 app.use('/assets', express.static(path.resolve(__dirname, '../assets')));
 
-
-
-const groups =
-  // {};
-  { "cda93bb6-5574-42b6-3398-a2f6e553a2be": { "color": "Red", "games": ["12333", "321321"], "hostName": "Stella", "fellow": {}, "players": [], "currentGame": 0, "timer": 0 } };
+const groups = {};
 
 // const masterKey = generate_id();
-const masterKey = "123";
+const masterKey = '123';
 
 // Run Socket
 io.on('connection', (socket) => {
   // Welcome current user
 
-
   // Listen for the new player joining the game by inputing name on splash page
   socket.on('createGroups', ({ groupNum, hostName, games }) => {
     // socket.join(room);
-    const colorArr = ['Red', "Blue", "Green", "Orange", "Purple", "Pink", "White"]
+    const colorArr = [
+      'Red',
+      'Blue',
+      'Green',
+      'Orange',
+      'Purple',
+      'Pink',
+      'White',
+    ];
     for (let i = 0; i < groupNum; i++) {
       // generate guid
       const gId = generate_id();
@@ -58,24 +61,29 @@ io.on('connection', (socket) => {
       };
     }
     socket.emit('generateGameInfo', groups, masterKey);
-
   });
-  socket.on("joinGroup", ({ groupId, fullName, hostKey }) => {
+
+  socket.on('joinGroup', ({ groupId, fullName, hostKey }) => {
     const personId = generate_id();
     socket.join(groupId);
     if (masterKey === hostKey) {
       groups[groupId].fellow = { id: personId, fullName };
-      socket.emit("Logged In");
-      socket.emit("Logged in as fellow", groupId, groups[groupId], personId)
+      socket.emit('Logged In');
+      socket.emit('Logged in as fellow', groupId, groups[groupId], personId);
     } else {
       groups[groupId].players.push({ id: personId, fullName });
-      socket.emit("Logged In");
-      socket.emit("Logged in as student", groupId, groups[groupId], personId)
+      socket.emit('Logged In');
+      socket.emit('Logged in as student', groupId, groups[groupId], personId);
     }
     console.log('GROUPS', groups);
+  });
+
+  socket.on('startGame', () => {
+    // When 'God' fellow clicks on 'Start Game',
+    // emit the Start timer to all
   })
 
-  socket.on("nextChallenge", ({ id, groupId }) => {
+  socket.on('nextChallenge', ({ id, groupId }) => {
     if (groups[groupId].fellow.id === id) {
       console.log('Correct Person!');
       groups[groupId].currentGame++;
@@ -85,16 +93,17 @@ io.on('connection', (socket) => {
         io.emit('Winner', `Team ${groups[groupId].color} Wins!`); // Sends a broadcast to everyone
       } else {
         // Move to the next question and alert team only!
-        io.to(groupId).emit("Next Challenge");
+        io.to(groupId).emit('Next Challenge');
       }
     }
-  })
-
-
+  });
 });
 
 // route handler to respond with main app
-app.use('/bundle.js', express.static(path.join(__dirname, '../dist/bundle.js')));
+app.use(
+  '/bundle.js',
+  express.static(path.join(__dirname, '../dist/bundle.js'))
+);
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
@@ -102,5 +111,3 @@ app.get('/', (req, res) => {
 server.listen(process.env.PORT || PORT, () => {
   console.log(`listening Server on ${PORT}`);
 });
-
-
