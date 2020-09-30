@@ -33,8 +33,12 @@ io.on('connection', (socket) => {
 
   // Listen for the new player joining the game by inputing name on splash page
   socket.on('createGroups', ({ groupNum, hostName, games, groupPassword, gameName }) => {
-
     masterKey = groupPassword;
+    groups[gameName] = {
+      hostName,
+      masterKey: groupPassword,
+      groups: {}
+    }
     const colorArr = [
       'Red',
       'Blue',
@@ -53,7 +57,7 @@ io.on('connection', (socket) => {
     }
 
     function createGroup(groupId, color) {
-      groups[groupId] = {
+      groups[gameName].groups[groupId] = {
         color,
         games,
         hostName,
@@ -65,76 +69,77 @@ io.on('connection', (socket) => {
       };
     }
 
-    socket.emit('generateGameInfo', groups, masterKey);
+    socket.emit('generateGameInfo', groups[gameName].groups, masterKey, gameName);
   });
 
-  socket.on('joinGroup', ({ groupId, fullName, hostKey }) => {
+  socket.on('joinGroup', ({ groupId, fullName, hostKey, gameName }) => {
     const personId = generate_id();
     socket.join(groupId);
     if (masterKey === hostKey) {
-      groups[groupId].fellow = { id: personId, fullName };
+      groups[gameName].groups[groupId].fellow = { id: personId, fullName };
       socket.emit('Logged In');
-      socket.emit('Logged in as fellow', groupId, groups[groupId], personId);
+      socket.emit('Logged in as fellow', groupId, groups[gameName].groups[groupId], personId, gameName);
     } else {
-      groups[groupId].players.push({ id: personId, fullName });
+      groups[gameName].groups[groupId].players.push({ id: personId, fullName });
       socket.emit('Logged In');
-      socket.emit('Logged in as student', groupId, groups[groupId], personId);
+      socket.emit('Logged in as student', groupId, groups[gameName].groups[groupId], personId, gameName);
     }
     console.log('GROUPS', groups);
   });
 
-  socket.on('requestGame', ({ id, groupId }) => {
+  socket.on('requestGame', ({ id, groupId, gameName }) => {
     // When group fellow clicks on 'Start Game',
     // store current time in startTime and emit to group
-    if (groups[groupId].fellow.id === id) {
-      console.log('Starting game for team', groups[groupId].color, '!');
-      groups[groupId].startTime = Date.now();
-      io.to(groupId).emit('startGame', groupId, groups[groupId].startTime);
+    if (groups[gameName].groups[groupId].fellow.id === id) {
+      console.log('Starting game for team', groups[gameName].groups[groupId].color, '!');
+      groups[gameName].groups[groupId].startTime = Date.now();
+      io.to(groupId).emit('startGame');
     }
   })
 
-  socket.on('getGroupsStatus', () => {
-    console.log('server.js/STATUS ARR1: ', groups);
-    const groupsArr = Object.keys(groups).reduce((acc, curr) => {
+  socket.on('getGroupsStatus', (gameName) => {
+    console.log("gameNAMe", gameName)
+    console.log('server.js/STATUS ARR1: ', groups[gameName].groups);
+    const groupsArr = Object.keys(groups[gameName].groups).reduce((acc, curr) => {
       acc.push({
-        'color': groups[curr].color,
-        'status': groups[curr].currentGame
+        'color': groups[gameName].groups[curr].color,
+        'status': groups[gameName].groups[curr].currentGame
       });
       return acc;
     }, []);
     console.log('server.js/STATUS ARR2: ', groupsArr);
-    io.emit('updateBoard', updateBoard());
+    io.emit('updateBoard', updateBoard(gameName));
   })
 
-  socket.on('nextChallenge', ({ id, groupId }) => {
-    if (groups[groupId].fellow.id === id) {
-      console.log('server.js/nextChallenge: ', groups[groupId].color);
-      groups[groupId].currentGame++;
+  socket.on('nextChallenge', ({ id, groupId, gameName }) => {
+    if (groups[gameName].groups[groupId].fellow.id === id) {
+      console.log('server.js/nextChallenge: ', groups[gameName].groups[groupId].color);
+      groups[gameName].groups[groupId].currentGame++;
 
-      if (groups[groupId].currentGame >= groups[groupId].games.length) {
+      if (groups[gameName].groups[groupId].currentGame >= groups[gameName].groups[groupId].games.length) {
         const endTime = Date.now();
-        const timeDuration_ms = (endTime - groups[groupId].startTime) / 1000;
+        const timeDuration_ms = (endTime - groups[gameName].groups[groupId].startTime) / 1000;
         const minutes = Math.floor(timeDuration_ms / 60);
         let seconds = Math.round(timeDuration_ms - minutes * 60).toString();
         if (seconds.length === 1) seconds = '0' + seconds;
         const timeDuration = `${minutes}:${seconds}`;
-        groups[groupId].currentGame = timeDuration;
+        groups[gameName].groups[groupId].currentGame = timeDuration;
         io.to(groupId).emit('endGame');
-        io.emit('Winner', groupId, groups[groupId].color, timeDuration); // Sends a broadcast to everyone
+        io.emit('Winner', groupId, groups[gameName].groups[groupId].color, timeDuration); // Sends a broadcast to everyone
       }
       else {
         // Move to the next question and alert team only!
         io.to(groupId).emit('Next Challenge');
-        io.emit('updateBoard', updateBoard());
+        io.emit('updateBoard', updateBoard(gameName));
       }
     }
   });
 
-  function updateBoard() {
-    const groupsArr = Object.keys(groups).reduce((acc, curr) => {
+  function updateBoard(gameName) {
+    const groupsArr = Object.keys(groups[gameName].groups).reduce((acc, curr) => {
       acc.push({
-        'color': groups[curr].color,
-        'status': groups[curr].currentGame
+        'color': groups[gameName].groups[curr].color,
+        'status': groups[gameName].groups[curr].currentGame
       });
       return acc;
     }, []);

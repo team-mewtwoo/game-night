@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import SocketContext from '../context/SocketContext';
 import GroupScore from './GroupScore'
 
-const ScoreBoard = () => {
+const ScoreBoard = ({ gameName }) => {
   const socket = useContext(SocketContext);
 
   const [groupsArr, setGroupsArr] = useState([]);
@@ -18,7 +18,7 @@ const ScoreBoard = () => {
     console.log(`Team ${color} is the best with a time of ${totalTime} 🚀 !!`);
   })
   useEffect(() => {
-    socket.emit('getGroupsStatus');
+    socket.emit('getGroupsStatus', gameName);
   }, [])
 
   socket.on("updateBoard", groups => {

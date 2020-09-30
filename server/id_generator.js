@@ -3,7 +3,7 @@ function S4() {
 }
 
 // then to call it, plus stitch in '4' in the third group
-const generate_id = () => (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+const generate_id = () => (S4() + S4() + "-" + S4()).toLowerCase();
 
 
 module.exports = generate_id;
