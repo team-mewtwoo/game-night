@@ -7,6 +7,11 @@ const ScoreBoard = () => {
   const [groupsArr, setGroupsArr] = useState([]);
 
   socket.on("Winner", (groupId, color, totalTime) => {
+    const newGroupsArr = groupsArr.map(group => {
+      if (group.color === color) group.status = totalTime;
+      return group;
+    });
+    setGroupsArr(newGroupsArr);
     console.log(`Team ${color} is the best with a time of ${totalTime} 🚀 !!`);
   })
   useEffect(() => {
