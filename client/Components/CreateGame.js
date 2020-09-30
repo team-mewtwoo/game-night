@@ -10,10 +10,14 @@ const CreateGame = () => {
   const [games, setGames] = useState([]);
   const [groups, setGroups] = useState({});
   const socket = useContext(SocketContext);
+  const [masterKey, setMasterKey] = useState("");
+  const [mainGameName, setMainGameName] = useState("");
 
 
-  socket.on("generateGameInfo", (groups, hostKey) => {
-    setGroups({ ...groups })
+  socket.on("generateGameInfo", (groups, masterKey, gameName) => {
+    setGroups({ ...groups });
+    setMasterKey(masterKey);
+    setMainGameName(gameName);
   })
   const onHostNameTextChange = (e) => {
     setHostName(e.target.value);
@@ -56,7 +60,8 @@ const CreateGame = () => {
         <input type="text" placeholder="Enter Challenge #2" onChange={(e) => onGameTextChange(e, 1)} />
         <button type="submit">Create Groups!</button>
       </form>
-
+      {mainGameName && <div>Game Name: {mainGameName}</div>}
+      {masterKey && <div>Master Key: {masterKey}</div>}
       {groupsTable}
     </div>
   );

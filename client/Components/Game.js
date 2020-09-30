@@ -11,6 +11,7 @@ const Game = () => {
   const [groupInfo, setGroupInfo] = useState({});
   const [id, setId] = useState('');
   const [groupId, setGroupId] = useState('');
+  const [gameName, setGameName] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
@@ -18,20 +19,22 @@ const Game = () => {
 
 
 
-  socket.on("Logged in as fellow", (groupId, group, personId) => {
+  socket.on("Logged in as fellow", (groupId, group, personId, gameName) => {
     console.log('LOGGED IN AS FELLOW');
     setIsFellow(true);
     setId(personId);
     setGroupId(groupId);
     setCurrentIndex(group.currentGame);
+    setGameName(gameName);
     setGroupInfo({ ...group });
 
   })
-  socket.on("Logged in as student", (groupId, group, personId) => {
+  socket.on("Logged in as student", (groupId, group, personId, gameName) => {
     console.log("Logged in as student");
     setId(personId);
     setGroupId(groupId);
     setCurrentIndex(group.currentGame);
+    setGameName(gameName);
     setGroupInfo({ ...group });
   })
 
@@ -41,16 +44,16 @@ const Game = () => {
   })
 
   const startGame = (id, groupId) => {
-    socket.emit('requestGame', ({ id, groupId }))
+    socket.emit('requestGame', ({ id, groupId, gameName }))
   }
 
-  socket.on('startGame', (groupId, startTime) => {
+  socket.on('startGame', () => {
     console.log('Game.js/startGame')
     setGameStarted(true);
   });
 
-  const nextChallenge = (id, groupId) => {
-    socket.emit("nextChallenge", ({ id, groupId }))
+  const nextChallenge = (id, groupId, gameName) => {
+    socket.emit("nextChallenge", ({ id, groupId, gameName }))
   }
 
   socket.on('endGame', () => {
@@ -66,12 +69,12 @@ const Game = () => {
           <div><h1>Current Challenge:</h1>
             {(groupInfo.games) && JSON.stringify(groupInfo.games[currentIndex])}
             <br></br>
-            {isFellow && <button onClick={() => nextChallenge(id, groupId)}>Next Challenge</button>}</div>
+            {isFellow && <button onClick={() => nextChallenge(id, groupId, gameName)}>Next Challenge</button>}</div>
         }
-        <ScoreBoard />
+        <ScoreBoard gameName={gameName} />
       </div> : <div><h1>Waiting for Fellow To Start Game</h1>
           <br></br>
-          {isFellow && <button onClick={() => startGame(id, groupId)}>Start Game</button>}
+          {isFellow && <button onClick={() => startGame(id, groupId, gameName)}>Start Game</button>}
         </div>
       }
     </div>
