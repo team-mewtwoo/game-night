@@ -57,7 +57,8 @@ io.on('connection', (socket) => {
         fellow: {},
         players: [],
         currentGame: 0,
-        timer: 0,
+        startTime: 0,
+        endTime: 0
       };
     }
     socket.emit('generateGameInfo', groups, masterKey);
@@ -78,25 +79,64 @@ io.on('connection', (socket) => {
     console.log('GROUPS', groups);
   });
 
-  socket.on('startGame', () => {
-    // When 'God' fellow clicks on 'Start Game',
-    // emit the Start timer to all
+  socket.on('requestGame', ({ id, groupId }) => {
+    // When group fellow clicks on 'Start Game',
+    // store current time in startTime and emit to group
+    if (groups[groupId].fellow.id === id) {
+      console.log('Starting game for team', groups[groupId].color, '!');
+      groups[groupId].startTime = Date.now();
+      io.to(groupId).emit('startGame', groupId, groups[groupId].startTime);
+    }
+  })
+
+  socket.on('getGroupsStatus', () => {
+    console.log('server.js/STATUS ARR1: ', groups);
+    const groupsArr = Object.keys(groups).reduce((acc, curr) => {
+      acc.push({
+        'color': groups[curr].color,
+        'status': groups[curr].currentGame
+      });
+      return acc;
+    }, []);
+    console.log('server.js/STATUS ARR2: ', groupsArr);
+    io.emit('updateBoard', updateBoard());
   })
 
   socket.on('nextChallenge', ({ id, groupId }) => {
     if (groups[groupId].fellow.id === id) {
-      console.log('Correct Person!');
+      console.log('server.js/nextChallenge: ', groups[groupId].color);
       groups[groupId].currentGame++;
+
       if (groups[groupId].currentGame >= groups[groupId].games.length) {
         // End game, end timer?, alert
-
-        io.emit('Winner', `Team ${groups[groupId].color} Wins!`); // Sends a broadcast to everyone
-      } else {
+        const endTime = Date.now();
+        const timeDuration = (endTime - groups[groupId].startTime) / 1000;
+        const minutes = Math.floor(timeDuration / 60);
+        const seconds = timeDuration - minutes * 60;
+        console.log("Minutes", minutes);
+        console.log("Seconds", seconds);
+        io.to(groupId).emit('endGame');
+        io.emit('Winner', groupId, groups[groupId].color, `${minutes}:${seconds}`); // Sends a broadcast to everyone
+      }
+      else {
         // Move to the next question and alert team only!
         io.to(groupId).emit('Next Challenge');
+        io.emit('updateBoard', updateBoard());
       }
     }
   });
+
+  function updateBoard() {
+    const groupsArr = Object.keys(groups).reduce((acc, curr) => {
+      acc.push({
+        'color': groups[curr].color,
+        'status': groups[curr].currentGame
+      });
+      return acc;
+    }, []);
+    console.log('server.js/updateBoard: ', groupsArr);
+    return groupsArr;
+  }
 });
 
 // route handler to respond with main app

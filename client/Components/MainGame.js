@@ -128,3 +128,122 @@ const MainGame = () => {
 };
 
 export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
+< br />
+  <ScoreBoard />
+    </div >
+  );
+};
+
+export default MainGame;
