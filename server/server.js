@@ -25,15 +25,16 @@ app.use('/assets', express.static(path.resolve(__dirname, '../assets')));
 const groups = {};
 
 // const masterKey = generate_id();
-const masterKey = '123';
+let masterKey = '123';
 
 // Run Socket
 io.on('connection', (socket) => {
   // Welcome current user
 
   // Listen for the new player joining the game by inputing name on splash page
-  socket.on('createGroups', ({ groupNum, hostName, games }) => {
-    // socket.join(room);
+  socket.on('createGroups', ({ groupNum, hostName, games, groupPassword, gameName }) => {
+
+    masterKey = groupPassword;
     const colorArr = [
       'Red',
       'Blue',
@@ -42,6 +43,8 @@ io.on('connection', (socket) => {
       'Purple',
       'Pink',
       'White',
+      "Marron",
+      "Turquoise"
     ];
     for (let i = 0; i < groupNum; i++) {
       // generate guid
@@ -61,6 +64,7 @@ io.on('connection', (socket) => {
         endTime: 0
       };
     }
+
     socket.emit('generateGameInfo', groups, masterKey);
   });
 
@@ -108,15 +112,15 @@ io.on('connection', (socket) => {
       groups[groupId].currentGame++;
 
       if (groups[groupId].currentGame >= groups[groupId].games.length) {
-        // End game, end timer?, alert
         const endTime = Date.now();
-        const timeDuration = (endTime - groups[groupId].startTime) / 1000;
-        const minutes = Math.floor(timeDuration / 60);
-        const seconds = timeDuration - minutes * 60;
-        console.log("Minutes", minutes);
-        console.log("Seconds", seconds);
+        const timeDuration_ms = (endTime - groups[groupId].startTime) / 1000;
+        const minutes = Math.floor(timeDuration_ms / 60);
+        let seconds = Math.round(timeDuration_ms - minutes * 60).toString();
+        if (seconds.length === 1) seconds = '0' + seconds;
+        const timeDuration = `${minutes}:${seconds}`;
+        groups[groupId].currentGame = timeDuration;
         io.to(groupId).emit('endGame');
-        io.emit('Winner', groupId, groups[groupId].color, `${minutes}:${seconds}`); // Sends a broadcast to everyone
+        io.emit('Winner', groupId, groups[groupId].color, timeDuration); // Sends a broadcast to everyone
       }
       else {
         // Move to the next question and alert team only!
