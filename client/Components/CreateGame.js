@@ -14,8 +14,6 @@ const CreateGame = () => {
     setGroups({ ...groups })
   })
 
-
-
   const onGroupTextChange = (e) => {
     setGroup(e.target.value);
   };
