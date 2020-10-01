@@ -53,6 +53,9 @@ const CreateGame = () => {
     const newInputBoxes = inputBoxes.concat([input]);
     setInputBoxes(newInputBoxes);
   }
+  const copyGroupId = (groupId) => {
+
+  }
 
   const groupsTable = Object.keys(groups).map(groupId => <GroupsTable groupId={groupId} color={groups[groupId].color} />)
   return (
@@ -68,9 +71,13 @@ const CreateGame = () => {
         <button type="button" className="add" value="+" onClick={() => addInputBox()}>Add Question</button>
         <button type="submit">Create Groups!</button>
       </form>
-      {mainGameName && <div>Game Name: {mainGameName}</div>}
-      {masterKey && <div>Master Key: {masterKey}</div>}
-      {groupsTable}
+
+      <div className="gameDetail">
+        {mainGameName && <div><b>Game Name: </b>{mainGameName}</div>}
+        {masterKey && <div><b>Master Key: </b>{masterKey}</div>}
+        {groupsTable}
+      </div>
+
     </div>
   );
 };

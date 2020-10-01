@@ -2,9 +2,9 @@ import React from 'react';
 
 
 function GroupTable({ groupId, color }) {
-  return (<ul>
-    <li>Group:{color}</li>
-    <li>Group ID:{groupId}</li>
-  </ul>)
+  return (<div>
+    <p ><b>{color}</b></p>
+    <p>Group ID:{groupId}</p>
+  </div >)
 }
 export default GroupTable
