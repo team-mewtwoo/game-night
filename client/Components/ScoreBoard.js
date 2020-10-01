@@ -2,27 +2,32 @@ import React, { useState, useEffect, useContext } from 'react';
 import SocketContext from '../context/SocketContext';
 import GroupScore from './GroupScore'
 
-const ScoreBoard = () => {
+const ScoreBoard = ({ gameName }) => {
   const socket = useContext(SocketContext);
+
   const [groupsArr, setGroupsArr] = useState([]);
 
   socket.on("Winner", (groupId, color, totalTime) => {
     const newGroupsArr = groupsArr.map(group => {
-      if (group.color === color) group.status = totalTime;
+      if (group.color === color) {
+        group.status = totalTime;
+      }
       return group;
     });
     setGroupsArr(newGroupsArr);
     console.log(`Team ${color} is the best with a time of ${totalTime} 🚀 !!`);
   })
   useEffect(() => {
-    socket.emit('getGroupsStatus');
+    socket.emit('getGroupsStatus', gameName);
   }, [])
 
-  socket.on("updateBoard", groupsArr => {
-    setGroupsArr([...groupsArr]);
+  socket.on("updateBoard", groups => {
+    setGroupsArr([...groups]);
+    console.log("Groups", groups);
   })
-  const groups = groupsArr.map((group, i) => <GroupScore key={`Groups-${i}`}
-    groupColor={group.color} groupStatus={group.status} />)
+  const groups = groupsArr
+    .map((group, i) => <GroupScore key={`Groups-${i}`}
+      groupColor={group.color} groupStatus={group.status} />)
   return (
     <div id="scoreboard">
       <h3 className="green">Scoreboard</h3>
