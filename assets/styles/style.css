@@ -10,7 +10,7 @@ body {
   background-color: aquamarine;
   background-size: cover;
   text-align: center;
-  font-family: sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; /* color:  */
 }
 
 /* .oauth {
@@ -67,6 +67,7 @@ button {
   font-weight: bold;
   box-shadow: 0 2px #999;
   cursor: pointer;
+  margin: 0.5vh;
 }
 button:active {
   background-color: rgba(107, 128, 138, 0.829);
@@ -182,10 +183,26 @@ button:active {
   height: 30px;
 }
 
+.gameDetail {
+  background-color: rgba(105, 105, 105, 0.274);
+  border-radius: 5px;
+  justify-items: center;
+  margin-top: 20px;
+  width: 180px;
+  height: auto;
+  padding: 1vw;
+}
+
 /* .challengeBox {
   width: 40%;
   height: 40%;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 } */

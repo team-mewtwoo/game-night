@@ -72,7 +72,7 @@ const Game = () => {
     <div>
       {gameStarted ? <div>
         {gameEnded ?
-          <div className="challengeBox"><h3 className="createFont">Congrats! Your team has finished! Waiting for other teams to finish...⌛</h3> </div>
+          <div className="challengeBox"><h5 >Congrats! Your team has finished! Waiting for other teams to finish...⌛</h5> </div>
           :
           <div className="challengeBox"><h3 className="createFont">Current Challenge</h3>
             {(groupInfo.games) && JSON.stringify(groupInfo.games[currentIndex])}
@@ -82,7 +82,7 @@ const Game = () => {
         <ScoreBoard gameName={gameName} />
       </div> : <div><h1>You're Registered! Sit back and relax until {groupInfo.fellow && 'your fellow'} starts the game.</h1>
           <br></br>
-          {isFellow && <button onClick={() => startGame(id, groupId, gameName)}>Start Game</button>}
+          {isFellow && <><br></br><button onClick={() => startGame(id, groupId, gameName)}>Start Game</button></>}
         </div>
       }
       <div className="waitingRoom">
