@@ -14,23 +14,28 @@ const socket = io();
 ReactDOM.render(
   <SocketContext.Provider value={socket}>
     <Router>
-      <Link to='/'>
-        <button>Home</button>
-      </Link>
-
       <Switch>
-        <Route exact path='/'>
-          <Link to='/createGame'>
-            <button>Create Game</button>
-          </Link>
-          <Link to='/joinGame'>
-            <button>Join Game</button>
-          </Link>
+        <Route exact path="/">
+          <div className="buttonContainer">
+            <h2 className="createFont">CS GAME NIGHT</h2>
+            <Link to="/createGame">
+              <button>Create Game</button>
+            </Link>
+            <Link to="/joinGame">
+              <button>Join Game</button>
+            </Link>
+          </div>
         </Route>
-        <Route path='/createGame'>
+        <Route path="/createGame">
+          <Link to="/">
+            <button>Home</button>
+          </Link>
           <CreateGame />
         </Route>
-        <Route path='/joinGame'>
+        <Route path="/joinGame">
+          <Link to="/">
+            <button>Home</button>
+          </Link>
           <JoinGame />
         </Route>
       </Switch>

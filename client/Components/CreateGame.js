@@ -10,7 +10,7 @@ const CreateGame = () => {
   const [games, setGames] = useState([]);
   const [groups, setGroups] = useState({});
   const socket = useContext(SocketContext);
-  const [inputBoxes, setInputBoxes] = useState([]);  
+  const [inputBoxes, setInputBoxes] = useState([]);
   const [masterKey, setMasterKey] = useState("");
   const [mainGameName, setMainGameName] = useState("");
 
@@ -36,7 +36,6 @@ const CreateGame = () => {
   }
 
   const onGameTextChange = (e, i) => {
-    console.log(games)
     const gameClone = [...games];
     gameClone[i] = e.target.value;
     setGames(gameClone);
@@ -57,15 +56,15 @@ const CreateGame = () => {
 
   const groupsTable = Object.keys(groups).map(groupId => <GroupsTable groupId={groupId} color={groups[groupId].color} />)
   return (
-    <div>
+    <div className="createGameContainer">
       <br />
-      <h2>Create Game</h2>
-      <form onSubmit={onSubmit}>
-        <input type="text" placeholder="Host Name" onChange={(e) => onHostNameTextChange(e)} />
-        <input type="text" placeholder="Game Name" onChange={(e) => onGameNameTextChange(e)} />
-        <input type="text" placeholder="Number of Groups" onChange={(e) => onGroupTextChange(e)} />
-        <input type="text" placeholder="Secret Password" onChange={(e) => onPasswordChange(e)} />
-        { inputBoxes }
+      <h2 className="createFont">Create Game</h2>
+      <form className="createForm" onSubmit={onSubmit}>
+        <input className="inputField" type="text" placeholder="Host Name" onChange={(e) => onHostNameTextChange(e)} />
+        <input className="inputField" type="text" placeholder="Game Name" onChange={(e) => onGameNameTextChange(e)} />
+        <input className="inputField" type="text" placeholder="Number of Groups" onChange={(e) => onGroupTextChange(e)} />
+        <input className="inputField" type="text" placeholder="Secret Password" onChange={(e) => onPasswordChange(e)} />
+        {inputBoxes}
         <button type="button" className="add" value="+" onClick={() => addInputBox()}>Add Question</button>
         <button type="submit">Create Groups!</button>
       </form>
@@ -76,9 +75,9 @@ const CreateGame = () => {
   );
 };
 
-const InputBox = ({onGameTextChange, index}) => {
+const InputBox = ({ onGameTextChange, index }) => {
   return (
-    <input type="text" placeholder="Enter Challenge" onChange={(e) => onGameTextChange(e, index)} />
+    <input className="inputField" type="text" placeholder="Enter Challenge" onChange={(e) => onGameTextChange(e, index)} />
   );
 }
 export default CreateGame;
