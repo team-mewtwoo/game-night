@@ -10,7 +10,7 @@ const ScoreBoard = ({ gameName }) => {
     socket.emit('getGroupsStatus', gameName);
   }, []);
 
-  socket.off("Winner").on("Winner", (groupId, color, totalTime) => {
+  socket.off("groupFinished").on("groupFinished", (groupId, color, totalTime) => {
     const newGroupsArr = groupsArr.map(group => {
       if (group.color === color) {
         group.status = totalTime;

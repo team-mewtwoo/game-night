@@ -37,7 +37,8 @@ io.on('connection', (socket) => {
     groups[gameName] = {
       hostName,
       masterKey: groupPassword,
-      groups: {}
+      groups: {},
+      finishedGroup: 0
     }
     const colorArr = [
       'Red',
@@ -65,7 +66,7 @@ io.on('connection', (socket) => {
         players: [],
         currentGame: 0,
         startTime: 0,
-        endTime: 0
+        duration: 0
       };
     }
 
@@ -124,9 +125,18 @@ io.on('connection', (socket) => {
         let seconds = Math.round(timeDuration_ms - minutes * 60).toString();
         if (seconds.length === 1) seconds = '0' + seconds;
         const timeDuration = `${minutes}:${seconds}`;
+        groups[gameName].groups[groupId].duration = timeDuration_ms;
         groups[gameName].groups[groupId].currentGame = timeDuration;
         io.to(groupId).emit('endGame');
-        io.emit('Winner', groupId, groups[gameName].groups[groupId].color, timeDuration); // Sends a broadcast to everyone
+        io.emit('groupFinished', groupId, groups[gameName].groups[groupId].color, timeDuration); // Sends a broadcast to everyone
+        const groupsKeys = Object.keys(groups[gameName].groups);
+        if (++(groups[gameName].finishedGroup) === groupsKeys.length) {
+          const winnerKey = groupsKeys.reduce( (acc, key) => {
+            return acc = (groups[gameName].groups[key].duration < groups[gameName].groups[acc].duration) ?
+              key : acc;
+          });
+          io.emit('winner', `Team ${groups[gameName].groups[winnerKey].color} WINS!`)
+        }
       }
       else {
         // Move to the next question and alert team only!
