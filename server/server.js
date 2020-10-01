@@ -25,7 +25,7 @@ app.use('/assets', express.static(path.resolve(__dirname, '../assets')));
 const groups = {};
 
 // const masterKey = generate_id();
-let masterKey = '123';
+// let masterKey = '123';
 
 // Run Socket
 io.on('connection', (socket) => {
@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
 
   // Listen for the new player joining the game by inputing name on splash page
   socket.on('createGroups', ({ groupNum, hostName, games, groupPassword, gameName }) => {
-    masterKey = groupPassword;
+    // masterKey = groupPassword;
     groups[gameName] = {
       hostName,
       masterKey: groupPassword,
@@ -69,13 +69,13 @@ io.on('connection', (socket) => {
       };
     }
 
-    socket.emit('generateGameInfo', groups[gameName].groups, masterKey, gameName);
+    socket.emit('generateGameInfo', groups[gameName].groups, groups[gameName].masterKey, gameName);
   });
 
   socket.on('joinGroup', ({ groupId, fullName, hostKey, gameName }) => {
     const personId = generate_id();
     socket.join(groupId);
-    if (masterKey === hostKey) {
+    if (groups[gameName].masterKey === hostKey) {
       groups[gameName].groups[groupId].fellow = { id: personId, fullName };
       socket.emit('Logged In');
       socket.emit('Logged in as fellow', groupId, groups[gameName].groups[groupId], personId, gameName);
