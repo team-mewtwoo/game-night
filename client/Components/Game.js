@@ -62,7 +62,7 @@ const Game = () => {
 
   socket.off("winner").on("winner", (winner) => {
     console.log('Game.js/winner: ', winner);
-    setWinner(winner);
+    setWinner('🎉🎉🎉 ' + winner + ' 🎉🎉🎉');
   });
 
   const startGame = (id, groupId) => {
@@ -78,9 +78,9 @@ const Game = () => {
       {gameStarted ?
         <div>
           {gameEnded ?
-            <div className="challengeBox"><h3>{endGame}</h3></div>
+            <div className="challengeBox"><h2 className="endGame">{endGame}</h2></div>
             :
-            <div className="challengeBox"><h2 >Lets Go Team {groupColor}!</h2>
+            <div className="challengeBox"><h2 >Lets Go Team {groupColor}! 👏👏</h2>
               <h3>Current Challenge:</h3>
               {(groupInfo.games) && JSON.stringify(groupInfo.games[currentIndex])}
               <br></br>
@@ -91,15 +91,16 @@ const Game = () => {
         </div>
         :
         <div>
-          <h1>Welcome to Team {groupColor}! Sit back and relax until {groupInfo.fellow && 'your fellow'} starts the game.</h1>
+          <h1>Welcome to Team {groupColor}! Sit back and relax until your fellow starts the game.</h1>
           <br></br>
           {isFellow && <><br></br><button onClick={() => startGame(id, groupId, gameName)}>Start Game</button></>}
+        
+          <div className="waitingRoom">
+            <h5>Sign-In</h5>
+            {players}
+          </div>
         </div>
       }
-
-      <div className="waitingRoom">
-        {players}
-      </div>
     </div>
   )
 }

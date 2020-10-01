@@ -42,7 +42,6 @@ const JoinGame = () => {
   return (
     <div>
       {!isInGame ?
-        <>
           <div className="createGameContainer">
             <br />
             <h3 className="createFont">Join Game</h3>
@@ -54,7 +53,7 @@ const JoinGame = () => {
               <button className="inputField" type="submit">Join Game!</button>
             </form>
           </div>
-        </> : <Game />
+        : <Game />
       }
 
     </div>
