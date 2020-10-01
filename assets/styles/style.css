@@ -1,3 +1,10 @@
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+}
+
 body {
   /* background-image: url('https://i.pinimg.com/originals/f2/f5/13/f2f513ded2eca406b32c468ffd961614.jpg'); */
   background-color: aquamarine;
@@ -6,12 +13,12 @@ body {
   font-family: sans-serif;
 }
 
-.oauth {
+/* .oauth {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
+} */
 
 #reset {
   position: fixed;
@@ -30,6 +37,18 @@ body {
   margin: auto;
   padding: 2em 1em;
 }
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 40%;
+  align-items: center;
+}
+.buttonContainer button {
+  margin: 2vh;
+  height: 60px;
+  width: 240px;
+}
 
 #header > h1 {
   font-size: 3vw;
@@ -46,6 +65,13 @@ button {
   border-radius: 5px;
   background-color: rgb(163, 157, 247);
   font-weight: bold;
+  box-shadow: 0 2px #999;
+  cursor: pointer;
+}
+button:active {
+  background-color: rgba(107, 128, 138, 0.829);
+  box-shadow: 0 0px #666;
+  transform: translateY(2px);
 }
 
 .page {
@@ -127,3 +153,39 @@ button {
     padding: 8px 4px;
   }
 }
+
+.createFont {
+  font-size: 65px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; /* color:  */
+}
+
+.createForm {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(105, 105, 105, 0.274);
+  border-radius: 8px; /* justify-content: center; */ /* align-content: center; */ /* align-self: center; */ /* padding-left: 258px; */
+  align-items: center;
+  width: 50%;
+  justify-content: space-around;
+  height: auto;
+}
+.createGameContainer {
+  display: flex;
+  justify-content: centers;
+  align-items: center;
+  flex-direction: column;
+}
+
+.inputField {
+  border-radius: 8px;
+  margin: 10px;
+  height: 30px;
+}
+
+/* .challengeBox {
+  width: 40%;
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
