@@ -2,13 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 
-import CreateGame from './components/CreateGame';
-import JoinGame from './components/JoinGame';
+import CreateGame from './Components/CreateGame';
+import JoinGame from './Components/JoinGame';
 import SocketContext from './context/SocketContext';
 import io from 'socket.io-client';
 import '../assets/styles/style.css';
 
-const socket = io.connect('http://localhost:3333');
+// const socket = io.connect('http://localhost:3333');
+const socket = io();
 
 ReactDOM.render(
   <SocketContext.Provider value={socket}>

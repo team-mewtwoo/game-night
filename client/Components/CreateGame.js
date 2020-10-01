@@ -10,6 +10,7 @@ const CreateGame = () => {
   const [games, setGames] = useState([]);
   const [groups, setGroups] = useState({});
   const socket = useContext(SocketContext);
+  const [inputBoxes, setInputBoxes] = useState([]);  
   const [masterKey, setMasterKey] = useState("");
   const [mainGameName, setMainGameName] = useState("");
 
@@ -35,6 +36,7 @@ const CreateGame = () => {
   }
 
   const onGameTextChange = (e, i) => {
+    console.log(games)
     const gameClone = [...games];
     gameClone[i] = e.target.value;
     setGames(gameClone);
@@ -46,6 +48,13 @@ const CreateGame = () => {
 
     socket.emit('createGroups', { groupNum, hostName, games, groupPassword, gameName });
   };
+
+  const addInputBox = () => {
+    const input = <InputBox key={`InputBox${games.length}`} onGameTextChange={onGameTextChange} index={games.length} />;
+    const newInputBoxes = inputBoxes.concat([input]);
+    setInputBoxes(newInputBoxes);
+  }
+
   const groupsTable = Object.keys(groups).map(groupId => <GroupsTable groupId={groupId} color={groups[groupId].color} />)
   return (
     <div>
@@ -56,8 +65,8 @@ const CreateGame = () => {
         <input type="text" placeholder="Game Name" onChange={(e) => onGameNameTextChange(e)} />
         <input type="text" placeholder="Number of Groups" onChange={(e) => onGroupTextChange(e)} />
         <input type="text" placeholder="Secret Password" onChange={(e) => onPasswordChange(e)} />
-        <input type="text" placeholder="Enter Challenge #1" onChange={(e) => onGameTextChange(e, 0)} />
-        <input type="text" placeholder="Enter Challenge #2" onChange={(e) => onGameTextChange(e, 1)} />
+        { inputBoxes }
+        <button type="button" className="add" value="+" onClick={() => addInputBox()}>Add Question</button>
         <button type="submit">Create Groups!</button>
       </form>
       {mainGameName && <div>Game Name: {mainGameName}</div>}
@@ -67,4 +76,9 @@ const CreateGame = () => {
   );
 };
 
+const InputBox = ({onGameTextChange, index}) => {
+  return (
+    <input type="text" placeholder="Enter Challenge" onChange={(e) => onGameTextChange(e, index)} />
+  );
+}
 export default CreateGame;
