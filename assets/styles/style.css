@@ -193,16 +193,17 @@ button:active {
   padding: 1vw;
 }
 
-/* .challengeBox {
-  width: 40%;
-  height: 40%;
-  display: flex;
+.challengeBox {
+  /* width: 80%;
+  height: 100%; */
+  /* margin-right: 25%; */
+  /* display: flex;
   justify-content: center;
-  align-items: center;
-  margin: auto;
+  align-items: center; */
+  /* margin: auto;
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
-  right: 0;
-} */
+  right: 0; */
+}
