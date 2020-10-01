@@ -12,6 +12,7 @@ const CreateGame = () => {
   const socket = useContext(SocketContext);
   const [inputBoxes, setInputBoxes] = useState([]);
   const [masterKey, setMasterKey] = useState("");
+  const [createGame, setCreateGame] = useState(false);
   const [mainGameName, setMainGameName] = useState("");
 
   socket.off("generateGameInfo").on("generateGameInfo", (groups, masterKey, gameName) => {
@@ -46,6 +47,7 @@ const CreateGame = () => {
     if (!groupNum || !hostName) return;
 
     socket.emit('createGroups', { groupNum, hostName, games, groupPassword, gameName });
+    setCreateGame(true);
   };
 
   const addInputBox = () => {
@@ -57,27 +59,30 @@ const CreateGame = () => {
 
   }
 
-  const groupsTable = Object.keys(groups).map(groupId => <GroupsTable groupId={groupId} color={groups[groupId].color} />)
-  return (
+  const groupsTable = Object.keys(groups).map(groupId =>
+    <GroupsTable groupId={groupId} color={groups[groupId].color} />)
+  
+    return (
     <div className="createGameContainer">
-      <br />
       <h2 className="createFont">Create Game</h2>
-      <form className="createForm" onSubmit={onSubmit}>
-        <input className="inputField" type="text" placeholder="Host Name" onChange={(e) => onHostNameTextChange(e)} />
-        <input className="inputField" type="text" placeholder="Game Name" onChange={(e) => onGameNameTextChange(e)} />
-        <input className="inputField" type="text" placeholder="Number of Groups" onChange={(e) => onGroupTextChange(e)} />
-        <input className="inputField" type="text" placeholder="Secret Password" onChange={(e) => onPasswordChange(e)} />
-        {inputBoxes}
-        <button type="button" className="add" value="+" onClick={() => addInputBox()}>Add Question</button>
-        <button type="submit">Create Groups!</button>
-      </form>
-
-      <div className="gameDetail">
-        {mainGameName && <div><b>Game Name: </b>{mainGameName}</div>}
-        {masterKey && <div><b>Master Key: </b>{masterKey}</div>}
-        {groupsTable}
-      </div>
-
+      {
+        !createGame ?
+          <form className="createForm" onSubmit={onSubmit}>
+            <input className="inputField" type="text" placeholder="Host Name" onChange={(e) => onHostNameTextChange(e)} />
+            <input className="inputField" type="text" placeholder="Game Name" onChange={(e) => onGameNameTextChange(e)} />
+            <input className="inputField" type="text" placeholder="Number of Groups" onChange={(e) => onGroupTextChange(e)} />
+            <input className="inputField" type="text" placeholder="Secret Password" onChange={(e) => onPasswordChange(e)} />
+            {inputBoxes}
+            <button type="button" className="add" value="+" onClick={() => addInputBox()}>Add Question +</button>
+            <button type="submit">Create Groups!</button>
+          </form>
+      :
+        <div className="gameDetail">
+          {mainGameName && <div><b>Game Name: </b>{mainGameName}</div>}
+          {masterKey && <div><b>Master Key: </b>{masterKey}</div>}
+          {groupsTable}
+        </div>
+      }
     </div>
   );
 };

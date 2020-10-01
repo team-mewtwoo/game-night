@@ -17,7 +17,7 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/">
           <div className="buttonContainer">
-            <h2 className="createFont">CS GAME NIGHT</h2>
+            <h2 className="createFont">🍻 CODESMITH GAME NIGHT 🍻</h2>
             <Link to="/createGame">
               <button>Create Game</button>
             </Link>
