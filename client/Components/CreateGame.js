@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import SocketContext from '../context/SocketContext';
 import GroupsTable from './GroupsTable'
 
@@ -14,12 +14,12 @@ const CreateGame = () => {
   const [masterKey, setMasterKey] = useState("");
   const [mainGameName, setMainGameName] = useState("");
 
-
-  socket.on("generateGameInfo", (groups, masterKey, gameName) => {
+  socket.off("generateGameInfo").on("generateGameInfo", (groups, masterKey, gameName) => {
     setGroups({ ...groups });
     setMasterKey(masterKey);
     setMainGameName(gameName);
   })
+
   const onHostNameTextChange = (e) => {
     setHostName(e.target.value);
   };
