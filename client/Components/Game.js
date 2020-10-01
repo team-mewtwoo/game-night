@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import SocketContext from '../context/SocketContext';
 import ScoreBoard from './ScoreBoard'
 
@@ -15,9 +15,7 @@ const Game = () => {
   const [players, setPlayers] = useState([]);
   const socket = useContext(SocketContext);
 
-
-
-  socket.on("Logged in as fellow", (groupId, group, personId, gameName) => {
+  socket.off("Logged in as fellow").on("Logged in as fellow", (groupId, group, personId, gameName) => {
     console.log('LOGGED IN AS FELLOW');
     setIsFellow(true);
     setId(personId);
@@ -26,7 +24,8 @@ const Game = () => {
     setGameName(gameName);
     setGroupInfo({ ...group });
   })
-  socket.on("Logged in as student", (groupId, group, personId, gameName) => {
+
+  socket.off("Logged in as student").on("Logged in as student", (groupId, group, personId, gameName) => {
     console.log("Logged in as student");
     setId(personId);
     setGroupId(groupId);
@@ -35,41 +34,45 @@ const Game = () => {
     setGroupInfo({ ...group });
   })
 
-  socket.on("Next Challenge", () => {
+  socket.off("Next Challenge").on("Next Challenge", () => {
     console.log('NEXTTT!@');
     setCurrentIndex(currentIndex + 1)
   })
 
-  const startGame = (id, groupId) => {
-    socket.emit('requestGame', ({ id, groupId, gameName }))
-  }
-
-  socket.on('playerJoined', (playersArr) => {
+  socket.off("playerJoined").on('playerJoined', (playersArr) => {
     const arr = playersArr.map((element, index) => {
       return (<Player key={`Player${index}`} fullName={element.fullName} index={index} />);
     });
     setPlayers(arr);
   })
 
-  socket.on('startGame', () => {
+
+
+
+  socket.off("startGame").on('startGame', () => {
     console.log('Game.js/startGame')
     setGameStarted(true);
   });
+
+  socket.off("endGame").on('endGame', () => {
+    console.log('Game.js/endGame')
+    setGameEnded(true);
+  })
+
+
+  const startGame = (id, groupId) => {
+    socket.emit('requestGame', ({ id, groupId, gameName }))
+  }
 
   const nextChallenge = (id, groupId, gameName) => {
     socket.emit("nextChallenge", ({ id, groupId, gameName }))
   }
 
-  socket.on('endGame', () => {
-    console.log('Game.js/endGame')
-    setGameEnded(true);
-  })
-
   return (
     <div>
       {gameStarted ? <div>
         {gameEnded ?
-          <div className="challengeBox"><h3 className="createFont">Game Ended</h3> </div>
+          <div className="challengeBox"><h3 className="createFont">Congrats! Your team has finished! Waiting for other teams to finish...⌛</h3> </div>
           :
           <div className="challengeBox"><h3 className="createFont">Current Challenge</h3>
             {(groupInfo.games) && JSON.stringify(groupInfo.games[currentIndex])}
@@ -82,13 +85,12 @@ const Game = () => {
           {isFellow && <button onClick={() => startGame(id, groupId, gameName)}>Start Game</button>}
         </div>
       }
-
       <div className="waitingRoom">
         {players}
       </div>
     </div>
-  );
-};
+  )
+}
 
 const Player = ({ fullName, index }) => {
   return (<p className="player">{index + 1}. { fullName}</p>);

@@ -4,10 +4,13 @@ import GroupScore from './GroupScore'
 
 const ScoreBoard = ({ gameName }) => {
   const socket = useContext(SocketContext);
-
   const [groupsArr, setGroupsArr] = useState([]);
 
-  socket.on("Winner", (groupId, color, totalTime) => {
+  useEffect(() => {
+    socket.emit('getGroupsStatus', gameName);
+  }, []);
+
+  socket.off("Winner").on("Winner", (groupId, color, totalTime) => {
     const newGroupsArr = groupsArr.map(group => {
       if (group.color === color) {
         group.status = totalTime;
@@ -16,15 +19,13 @@ const ScoreBoard = ({ gameName }) => {
     });
     setGroupsArr(newGroupsArr);
     console.log(`Team ${color} is the best with a time of ${totalTime} 🚀 !!`);
-  })
-  useEffect(() => {
-    socket.emit('getGroupsStatus', gameName);
-  }, [])
+  });
 
-  socket.on("updateBoard", groups => {
+  socket.off("updateBoard").on("updateBoard", groups => {
     setGroupsArr([...groups]);
     console.log("Groups", groups);
-  })
+  });
+
   const groups = groupsArr
     .map((group, i) => <GroupScore key={`Groups-${i}`}
       groupColor={group.color} groupStatus={group.status} />)
