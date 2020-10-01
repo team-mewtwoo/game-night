@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3333;
 const { createServer } = require('http');
 const generate_id = require('./id_generator.js');
 
@@ -74,9 +74,10 @@ io.on('connection', (socket) => {
     } else {
       groups[groupId].players.push({ id: personId, fullName });
       socket.emit('Logged In');
-      socket.emit('Logged in as student', groupId, groups[groupId], personId);
+      socket.emit('Logged in as student', groupId, groups[groupId], personId, fullName);
     }
-    console.log('GROUPS', groups);
+    io.to(groupId).emit('playerJoined', groups[groupId].players);
+    console.log('server.js/joinGroup: ', groups);
   });
 
   socket.on('requestGame', ({ id, groupId }) => {
